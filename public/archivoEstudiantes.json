@@ -1,0 +1,43 @@
+{
+    "estudiantes": [
+        {
+            "nombre": "Martina",
+            "cursos": [
+                {
+                    "id": 204,
+                    "curso": "React"
+                },
+                {
+                    "id": 135,
+                    "curso": "Angular"
+                }
+            ],
+            "apellido": "Garcia"
+        },
+        {
+            "nombre": "Nat",
+            "cursos": [
+                {
+                    "id": 162,
+                    "curso": "IPV6"
+                }
+            ],
+            "apellido": "Ramanosh"
+        },
+        {
+            "nombre": "Wanda",
+            "cursos": [
+                {
+                    "id": 278,
+                    "curso": "Bases de datos"
+                },
+                {
+                    "id": 364,
+                    "curso": "React"
+                }
+            ],
+            "apellido": "Maxinoff"
+        }
+    ],
+    "result": "success"
+}

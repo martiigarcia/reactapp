@@ -1,0 +1,37 @@
+{
+    "cursos": [
+        {
+            "id": 461,
+            "curso": "React"
+        },
+        {
+            "id": 808,
+            "curso": "Angular"
+        },
+        {
+            "id": 443,
+            "curso": "Seminario"
+        },
+        {
+            "id": 350,
+            "curso": "Ingenieria"
+        },
+        {
+            "id": 655,
+            "curso": "Bases de datos"
+        },
+        {
+            "id": 105,
+            "curso": "IPV6"
+        },
+        {
+            "id": 853,
+            "curso": "Programacion concurrente"
+        },
+        {
+            "id": 102,
+            "curso": "Programacion orientada a objetos"
+        }
+    ],
+    "result": "success"
+}
