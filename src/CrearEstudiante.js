@@ -2,14 +2,26 @@ import React, { Component } from "react";
 import "./CrearEstudiante.css";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import FormGroup from "@mui/material/FormGroup";
+import FormLabel from "@mui/material/FormLabel";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
-import { MenuItem } from "@mui/material";
+import { Input, MenuItem, TextField } from "@mui/material";
+import Paper from "@mui/material/Paper";
+import { display } from "@mui/system";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Avatar from "@mui/material/Avatar";
+import ImageIcon from "@mui/icons-material/Image";
+import WorkIcon from "@mui/icons-material/Work";
+import BeachAccessIcon from "@mui/icons-material/BeachAccess";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import PruebaToggleButon from "./PruebaToggleButon";
 
 export default class CrearEstudiante extends Component {
   constructor(props) {
@@ -77,50 +89,114 @@ export default class CrearEstudiante extends Component {
 
   render() {
     return (
-      <Divider className="estiloEstudiante">
-        <Container maxWidth="m">
-          <FormControl>
-            <InputLabel id="demo-simple-select-label">Cursos</InputLabel>
-            <Select
-              name="cursos"
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Cursos"
-              onChange={this.handleChange}
+      <div>
+        <Divider className="estiloCrearEstudiante">
+          <Container
+            maxWidth="m"
+            component={Paper}
+            sx={{ mb: "20px", pt: "10px" }}
+          >
+            <List
+              sx={{
+                width: "100%",
+                maxWidth: 400,
+                bgcolor: "background.paper",
+              }}
             >
-              {this.state.listaCursos.map((c) => (
-                <MenuItem value={c.id}>{c.curso}</MenuItem>
-              ))}
-            </Select>
-
-            <FormLabel>
-              Nombre:{" "}
-              <input
-                placeholder="Nombre"
-                type="text"
-                name="nombre"
-                value={this.state.form.nombre}
-                onChange={this.handleChange}
-              />
-            </FormLabel>
-            <FormLabel>
-              Apellido:{" "}
-              <input
-                placeholder="Apellido"
-                type="text"
-                name="apellido"
-                value={this.state.form.apellido}
-                onChange={this.handleChange}
-              />
-            </FormLabel>
-
-            <Button type="submit" onClick={this.handleSubmit}>
-              Confirmar
-            </Button>
-          </FormControl>
-          <p>{this.state.resultado} --> Mostrar error</p>
-        </Container>
-      </Divider>
+              <ListItem>
+                <p>
+                  Complete los siguientes campos<br></br> para registrar un
+                  estudiante:
+                </p>
+              </ListItem>
+              <ListItem>
+                <FormLabel
+                  sx={{
+                    p: "20px",
+                  }}
+                >
+                  Cursos:{" "}
+                </FormLabel>
+                <TextField
+                  sx={{
+                    width: 300,
+                  }}
+                  id="outlined-select-currency"
+                  select
+                  label="Cursos"
+                  onChange={this.handleChange}
+                  helperText="Seleccione un curso de la lista"
+                >
+                  {this.state.listaCursos.map((c) => (
+                    <MenuItem value={c.id}>{c.curso}</MenuItem>
+                  ))}
+                </TextField>
+              </ListItem>
+              <Divider variant="inset" component="li" />
+              <ListItem>
+                <FormLabel
+                  sx={{
+                    p: "20px",
+                  }}
+                >
+                  Nombre:{" "}
+                  <Input
+                    color="secondary"
+                    fullWidth
+                    sx={{ m: 1 }}
+                    variant="standard"
+                    placeholder="Nombre"
+                    type="text"
+                    name="nombre"
+                    value={this.state.form.nombre}
+                    onChange={this.handleChange}
+                  />
+                </FormLabel>
+              </ListItem>
+              <Divider variant="inset" component="li" />
+              <ListItem>
+                <FormLabel
+                  sx={{
+                    p: "20px",
+                  }}
+                >
+                  Apellido:{" "}
+                  <Input
+                    color="secondary"
+                    fullWidth
+                    sx={{ m: 1 }}
+                    variant="standard"
+                    placeholder="Apellido"
+                    type="text"
+                    name="apellido"
+                    value={this.state.form.apellido}
+                    onChange={this.handleChange}
+                  />
+                </FormLabel>
+              </ListItem>
+              <Divider variant="inset" component="li" />
+              <ListItem>
+                <Button
+                  variant="outlined"
+                  type="submit"
+                  sx={{
+                    ml: "125px",
+                    width: "100px",
+                    borderColor: "secondary.main",
+                    pt: "5px",
+                    color: "black",
+                  }}
+                  onClick={this.handleSubmit}
+                >
+                  Confirmar
+                </Button>
+              </ListItem>
+              <ListItem></ListItem>
+              <p>{this.state.resultado ? "" : "-->Mostrar error"}</p>
+            </List>
+          </Container>
+        </Divider>
+      </div>
     );
   }
 }

@@ -1,18 +1,44 @@
-import logo from "./logo.svg";
+import React, { Component } from "react";
 import "./App.css";
+import Body from "./Body";
+import Menu from "./Menu";
 
-import Estudiante from "./Estudiante";
-import Cursos from "./Cursos";
-import CrearEstudiante from "./CrearEstudiante";
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      itemMenu: 0,
+      searchTxt: "",
+    };
+    this.handleItemMenuClicked = this.handleItemMenuClicked.bind(this);
+    this.handleDoSearch = this.handleDoSearch.bind(this);
+  }
 
-function App() {
-  return (
-    <>
-      <Estudiante />
-      <Cursos />
-      <CrearEstudiante />
-    </>
-  );
+  handleDoSearch(inputValue) {
+    this.setState({
+      searchTxt: inputValue,
+      itemMenu: 2,
+    });
+  }
+
+  handleItemMenuClicked(itemClickeado) {
+    this.setState({
+      itemMenu: itemClickeado,
+      searchTxt: "",
+    });
+  }
+  render() {
+    return (
+      <>
+        <Menu
+          doSearch={this.handleDoSearch}
+          handler={this.handleItemMenuClicked}
+        />
+        <Body
+          inputValue={this.state.searchTxt}
+          itemClicked={this.state.itemMenu}
+        />
+      </>
+    );
+  }
 }
-
-export default App;

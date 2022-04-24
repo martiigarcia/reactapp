@@ -2,13 +2,17 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import Estudiante from "./Estudiante";
+import Container from "@mui/material/Container";
 import reportWebVitals from "./reportWebVitals";
+import PruebaToggleButon from "./PruebaToggleButon";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <Container fluid className="body">
+      <PruebaToggleButon />
+      <App />
+    </Container>
   </React.StrictMode>
 );
 

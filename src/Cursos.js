@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./Estudiante.css";
+import "./Curso.css";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import Table from "@mui/material/Table";
@@ -49,13 +49,40 @@ export default class Cursos extends Component {
 
   render() {
     return (
-      <Divider className="estiloEstudiante">
-        <Container maxWidth="m">
-          <TableContainer component={Paper}>
-            <Button onClick={this.listarCursos}>listar cursos</Button>
-            <Button onClick={this.listarCursosEstudiante}>
+      <Divider className="estiloCursos">
+        <Container
+          maxWidth="m"
+          component={Paper}
+          sx={{ mb: "20px", pt: "10px" }}
+        >
+          <TableContainer>
+            <Button
+              variant="outlined"
+              sx={{
+                borderColor: "secondary.main",
+                color: "secondary.dark",
+                mr: "10px",
+              }}
+              onClick={this.listarCursos}
+            >
+              listar cursos
+            </Button>
+            <Button
+              variant="outlined"
+              sx={{
+                borderColor: "secondary.main",
+                color: "secondary.dark",
+                ml: "10px",
+              }}
+              onClick={this.listarCursosEstudiante}
+            >
               listar primer estudiante
             </Button>
+            <p>
+              {this.state.estudiante
+                ? "Estudiante: " + this.state.estudiante
+                : ""}
+            </p>
             <Table sx={{ minWidth: 700 }} aria-label="spanning table">
               <TableHead>
                 <TableRow>
