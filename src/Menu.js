@@ -64,6 +64,13 @@ export default class Menu extends Component {
                 >
                   Crear estudiante
                 </Tab>
+                <Tab
+                  label="Inscribir estudiante"
+                  href="#"
+                  onClick={(e) => this.handleClick(e, 3)}
+                >
+                  Inscribir estudiante
+                </Tab>
 
                 <Paper
                   component="form"
@@ -74,7 +81,7 @@ export default class Menu extends Component {
                   }}
                 >
                   <InputBase
-                    sx={{ color: "secondary.light", pl: "25px" }}
+                    sx={{ color: "secondary.light", pl: "10px" }}
                     placeholder="Buscar"
                     inputProps={{ "aria-label": "buscar" }}
                     type="text"

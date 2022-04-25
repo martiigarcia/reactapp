@@ -1,16 +1,16 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import Container from "@mui/material/Container";
 import reportWebVitals from "./reportWebVitals";
 import PruebaToggleButon from "./PruebaToggleButon";
+import { createRoot } from "react-dom/client";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const container = document.getElementById("root");
+const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
   <React.StrictMode>
     <Container fluid className="body">
-      <PruebaToggleButon />
       <App />
     </Container>
   </React.StrictMode>

@@ -10,7 +10,7 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import { Input, MenuItem, TextField } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import { display } from "@mui/system";
+import { display, width } from "@mui/system";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -25,52 +25,16 @@ import PruebaToggleButon from "./PruebaToggleButon";
 
 export default function CrearEstudiante(props) {
   const [cursos, setCursos] = useState({ cursos: [] });
-  const [nombre, setNombre] = useState({ nombre: "" });
-  const [apellido, setApellido] = useState({ apellido: "" });
-  const [curso, setCurso] = useState({ curso: "" });
+  const [cursoseleccionado, setCurso] = useState({ cursoSeleccionado: "" });
+  const [estudiantes, setEstudiantes] = useState({ estudiantes: [] });
+  const [estudianteSeleccionado, setEstudiante] = useState({
+    estudianteSeleccionado: "",
+  });
 
   useEffect(() => {
+    listarEstudiantes();
     listarCursos();
   }, []);
-
-  function handleChangeCursos(e) {
-    let valor = e.target.value;
-    setCurso(() => ({
-      curso: valor,
-    }));
-  }
-  function handleChangeNombre(e) {
-    let valor = e.target.value;
-    setNombre(() => ({
-      nombre: valor,
-    }));
-  }
-  function handleChangeApellido(e) {
-    let valor = e.target.value;
-    setApellido(() => ({
-      apellido: valor,
-    }));
-  }
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    console.log(nombre.nombre);
-    console.log(apellido.apellido);
-    console.log(curso.curso);
-
-    fetch("http://localhost:1234/estudiantes", {
-      method: "POST",
-      body: JSON.stringify({
-        nombre: nombre.nombre,
-        apellido: apellido.apellido,
-        cursos: curso.curso,
-      }),
-    })
-      .then((resp) => resp.json())
-      .then((json) => {
-        //ver que funcionan los errores
-      });
-  }
 
   function listarCursos() {
     fetch("http://localhost:1234/cursos")
@@ -82,10 +46,55 @@ export default function CrearEstudiante(props) {
         }));
       });
   }
+  function handleChangeCurso(e) {
+    let valor = e.target.value;
+    setCurso(() => ({
+      cursoSeleccionado: valor,
+    }));
+  }
+  function handleChangeEstudiante(e) {
+    let valor = e.target.value;
+    setEstudiante(() => ({
+      estudianteSeleccionado: valor,
+    }));
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    console.log(estudianteSeleccionado.estudianteSeleccionado);
+    console.log(cursoseleccionado.cursoSeleccionado);
+
+    fetch(
+      "http://localhost:1234/estudiantes?apellido=" +
+        estudianteSeleccionado.estudianteSeleccionado,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          cursos: [cursoseleccionado.cursoSeleccionado],
+        }),
+      }
+    )
+      .then((resp) => resp.json())
+      .then((json) => {
+        //ver como funcionan los errores aca
+      });
+  }
+
+  function listarEstudiantes() {
+    fetch("http://localhost:1234/estudiantes")
+      .then((resp) => resp.json())
+      .then((json) => {
+        setEstudiantes(() => ({
+          estudiantes: json.estudiantes,
+          resultado: json.result,
+        }));
+      });
+  }
 
   return (
     <div>
-      <Divider className="estiloCrearEstudiante">
+      <Divider className="estiloEstudiante">
         <Container
           maxWidth="m"
           component={Paper}
@@ -99,17 +108,21 @@ export default function CrearEstudiante(props) {
           >
             <ListItem>
               <p>
-                Complete los siguientes campos para registrar un estudiante:
+                Complete con el curso y el estudiante<br></br> correspondientes
+                a la inscripcion:
               </p>
             </ListItem>
             <ListItem>
               <FormLabel
                 sx={{
                   p: "20px",
+                  pb: "5px",
                 }}
               >
-                Cursos:{" "}
+                Seleccione el curso:
               </FormLabel>
+            </ListItem>
+            <ListItem>
               <TextField
                 sx={{
                   width: "500px",
@@ -118,7 +131,7 @@ export default function CrearEstudiante(props) {
                 id="outlined-select-currency"
                 select
                 label="Cursos"
-                onChange={handleChangeCursos}
+                onChange={handleChangeCurso}
                 helperText="Seleccione un curso de la lista"
               >
                 {cursos.cursos.map((c) => (
@@ -131,41 +144,33 @@ export default function CrearEstudiante(props) {
               <FormLabel
                 sx={{
                   p: "20px",
+                  pb: "5px",
                 }}
               >
-                Nombre:{" "}
-                <Input
-                  color="secondary"
-                  fullWidth
-                  sx={{ m: 1, width: "350px" }}
-                  variant="standard"
-                  placeholder="Nombre"
-                  type="text"
-                  name="nombre"
-                  onChange={handleChangeNombre}
-                />
+                Seleccion el estudiante a inscribir:
               </FormLabel>
+            </ListItem>
+            <ListItem>
+              <TextField
+                sx={{
+                  width: "500px",
+                  pb: "20px",
+                }}
+                id="outlined-select-currency"
+                select
+                label="Estudiantes"
+                onChange={handleChangeEstudiante}
+                helperText="Seleccione un estudiante de la lista"
+              >
+                {estudiantes.estudiantes.map((c, index) => (
+                  <MenuItem value={c.apellido}>
+                    {c.nombre} {c.apellido}
+                  </MenuItem>
+                ))}
+              </TextField>
             </ListItem>
             <Divider variant="inset" component="li" />
-            <ListItem>
-              <FormLabel
-                sx={{
-                  p: "20px",
-                }}
-              >
-                Apellido:{" "}
-                <Input
-                  color="secondary"
-                  fullWidth
-                  sx={{ m: 1, width: "350px" }}
-                  variant="standard"
-                  placeholder="Apellido"
-                  type="text"
-                  name="apellido"
-                  onChange={handleChangeApellido}
-                />
-              </FormLabel>
-            </ListItem>
+
             <Divider variant="inset" component="li" />
             <ListItem>
               <Button
@@ -181,7 +186,7 @@ export default function CrearEstudiante(props) {
                 }}
                 onClick={handleSubmit}
               >
-                Confirmar
+                Inscribir
               </Button>
             </ListItem>
             <ListItem></ListItem>

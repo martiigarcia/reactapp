@@ -17,7 +17,6 @@ export default class App extends Component {
   handleDoSearch(inputValue) {
     this.setState({
       searchTxt: inputValue,
-      itemMenu: 2,
     });
   }
 
