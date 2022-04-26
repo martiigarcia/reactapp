@@ -3,7 +3,6 @@ import "./index.css";
 import App from "./App";
 import Container from "@mui/material/Container";
 import reportWebVitals from "./reportWebVitals";
-import PruebaToggleButon from "./PruebaToggleButon";
 import { createRoot } from "react-dom/client";
 
 const container = document.getElementById("root");

@@ -21,7 +21,6 @@ import WorkIcon from "@mui/icons-material/Work";
 import BeachAccessIcon from "@mui/icons-material/BeachAccess";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import PruebaToggleButon from "./PruebaToggleButon";
 
 export default function CrearEstudiante(props) {
   const [cursos, setCursos] = useState({ cursos: [] });
@@ -30,6 +29,10 @@ export default function CrearEstudiante(props) {
   const [estudianteSeleccionado, setEstudiante] = useState({
     estudianteSeleccionado: "",
   });
+  const [alignment, setAlignment] = React.useState("");
+  const handleChangeBoton = (event, newAlignment) => {
+    setAlignment(newAlignment);
+  };
 
   useEffect(() => {
     listarEstudiantes();
@@ -173,21 +176,23 @@ export default function CrearEstudiante(props) {
 
             <Divider variant="inset" component="li" />
             <ListItem>
-              <Button
+              <ToggleButtonGroup
+                color="secondary"
+                value={alignment}
+                exclusive
+                onChange={handleChangeBoton}
+                onClick={handleSubmit}
                 variant="outlined"
                 type="submit"
                 sx={{
                   mt: "20px",
                   ml: "200px",
                   width: "100px",
-                  borderColor: "secondary.main",
                   pt: "5px",
-                  color: "black",
                 }}
-                onClick={handleSubmit}
               >
-                Inscribir
-              </Button>
+                <ToggleButton value="inscribir">Inscribir</ToggleButton>
+              </ToggleButtonGroup>
             </ListItem>
             <ListItem></ListItem>
           </List>

@@ -1,33 +1,28 @@
 import React, { Component, useEffect, useState } from "react";
 import "./CrearEstudiante.css";
 import Divider from "@mui/material/Divider";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import FormControl from "@mui/material/FormControl";
-import FormGroup from "@mui/material/FormGroup";
 import FormLabel from "@mui/material/FormLabel";
-import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
 import { Input, MenuItem, TextField } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import { display } from "@mui/system";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
-import ImageIcon from "@mui/icons-material/Image";
-import WorkIcon from "@mui/icons-material/Work";
-import BeachAccessIcon from "@mui/icons-material/BeachAccess";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import PruebaToggleButon from "./PruebaToggleButon";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Stack from "@mui/material/Stack";
 
 export default function CrearEstudiante(props) {
   const [cursos, setCursos] = useState({ cursos: [] });
   const [nombre, setNombre] = useState({ nombre: "" });
   const [apellido, setApellido] = useState({ apellido: "" });
   const [curso, setCurso] = useState({ curso: "" });
+
+  const [alignment, setAlignment] = React.useState("");
+  const [resultado, setResultado] = React.useState({ resultado: "" });
+  const [errors, setErrors] = React.useState({ errores: [] });
+  const [mensaje, setMensaje] = React.useState({ mensaje: "" });
 
   useEffect(() => {
     listarCursos();
@@ -51,6 +46,10 @@ export default function CrearEstudiante(props) {
       apellido: valor,
     }));
   }
+  const handleChangeBoton = (event, newAlignment) => {
+    setAlignment(newAlignment);
+  };
+
   function handleSubmit(e) {
     e.preventDefault();
 
@@ -68,8 +67,17 @@ export default function CrearEstudiante(props) {
     })
       .then((resp) => resp.json())
       .then((json) => {
-        //ver que funcionan los errores
+        if (json.result === "error") {
+          console.log(json.result);
+          setResultado(json.result);
+          setErrors(json.errors);
+          return;
+        } else {
+          setResultado(json.result);
+          setMensaje("El estudiante fue creado exitosamente");
+        }
       });
+    console.log(resultado.resultado);
   }
 
   function listarCursos() {
@@ -168,24 +176,32 @@ export default function CrearEstudiante(props) {
             </ListItem>
             <Divider variant="inset" component="li" />
             <ListItem>
-              <Button
+              <ToggleButtonGroup
+                color="secondary"
+                value={alignment}
+                exclusive
+                onChange={handleChangeBoton}
+                onClick={handleSubmit}
                 variant="outlined"
                 type="submit"
                 sx={{
                   mt: "20px",
                   ml: "200px",
                   width: "100px",
-                  borderColor: "secondary.main",
                   pt: "5px",
-                  color: "black",
                 }}
-                onClick={handleSubmit}
               >
-                Confirmar
-              </Button>
+                <ToggleButton value="confirmar">Confirmar</ToggleButton>
+              </ToggleButtonGroup>
             </ListItem>
             <ListItem></ListItem>
           </List>
+          <Stack sx={{ width: "100%", mb: "10px" }} spacing={2}>
+            <Alert severity={resultado.resultado}>
+              <AlertTitle>Error</AlertTitle>
+              This is an error alert — <strong>check it out!</strong>
+            </Alert>
+          </Stack>
         </Container>
       </Divider>
     </div>
