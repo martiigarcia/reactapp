@@ -1,35 +1,32 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./CrearEstudiante.css";
 import Divider from "@mui/material/Divider";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import FormControl from "@mui/material/FormControl";
-import FormGroup from "@mui/material/FormGroup";
 import FormLabel from "@mui/material/FormLabel";
-import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import { Input, MenuItem, TextField } from "@mui/material";
+import { MenuItem, TextField } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import { display, width } from "@mui/system";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
-import ImageIcon from "@mui/icons-material/Image";
-import WorkIcon from "@mui/icons-material/Work";
-import BeachAccessIcon from "@mui/icons-material/BeachAccess";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Stack from "@mui/material/Stack";
 
 export default function CrearEstudiante(props) {
-  const [cursos, setCursos] = useState({ cursos: [] });
-  const [cursoseleccionado, setCurso] = useState({ cursoSeleccionado: "" });
-  const [estudiantes, setEstudiantes] = useState({ estudiantes: [] });
-  const [estudianteSeleccionado, setEstudiante] = useState({
-    estudianteSeleccionado: "",
-  });
   const [alignment, setAlignment] = React.useState("");
+
+  const [cursos, setCursos] = useState({ cursos: [] });
+  const [estudiantes, setEstudiantes] = useState({ estudiantes: [] });
+
+  const [form, setForm] = useState({
+    form: { nombreCurso: "", apellidoEstudiante: "" },
+  });
+
+  const [resultado, setResultado] = React.useState({ resultado: "" });
+  const [errors, setErrors] = React.useState({ errors: {} });
+  const [mensaje, setMensaje] = React.useState({ mensaje: "" });
+
   const handleChangeBoton = (event, newAlignment) => {
     setAlignment(newAlignment);
   };
@@ -38,6 +35,17 @@ export default function CrearEstudiante(props) {
     listarEstudiantes();
     listarCursos();
   }, []);
+
+  function listarEstudiantes() {
+    fetch("http://localhost:1234/estudiantes")
+      .then((resp) => resp.json())
+      .then((json) => {
+        setEstudiantes(() => ({
+          estudiantes: json.estudiantes,
+          resultado: json.result,
+        }));
+      });
+  }
 
   function listarCursos() {
     fetch("http://localhost:1234/cursos")
@@ -49,49 +57,77 @@ export default function CrearEstudiante(props) {
         }));
       });
   }
-  function handleChangeCurso(e) {
+
+  function handleChangeForm(e) {
+    let nombre = e.target.name;
     let valor = e.target.value;
-    setCurso(() => ({
-      cursoSeleccionado: valor,
+
+    setForm((state) => ({
+      form: {
+        ...state.form,
+        [nombre]: valor,
+      },
     }));
   }
-  function handleChangeEstudiante(e) {
-    let valor = e.target.value;
-    setEstudiante(() => ({
-      estudianteSeleccionado: valor,
-    }));
-  }
+
+  /*function handleSubmit(e) {
+    e.preventDefault();
+
+    console.log("apellido estudiante: " + form.form.apellidoEstudiante);
+    console.log("nombre curso: " + form.form.nombreCurso);
+
+    fetch(
+      "http://localhost:1234/inscripcion?apellido=" +
+        form.form.apellidoEstudiante +
+        "&curso=" +
+        form.form.nombreCurso,
+      {
+        method: "POST",
+        //body: JSON.stringify({
+       //   cursos: [cursoseleccionado.cursoSeleccionado],
+       // }),
+      }
+    ).then((resp) => resp.json())
+      .then((json) => {
+        if (json.result === "error") {
+          setResultado({ resultado: json.result });
+          setMensaje({ mensaje: "No se completaron los datos correctamente" });
+          setErrors({ errors: json.errors });
+          return;
+        } else {
+          setResultado({ resultado: json.result });
+          setMensaje({ mensaje: "El estudiante fue inscripto exitosamente" });
+          setErrors({ errors: [] });
+        }
+      });
+  }*/
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    console.log(estudianteSeleccionado.estudianteSeleccionado);
-    console.log(cursoseleccionado.cursoSeleccionado);
+    console.log("apellido estudiante: " + form.form.apellidoEstudiante);
+    console.log("nombre curso: " + form.form.nombreCurso);
 
-    fetch(
-      "http://localhost:1234/inscripcion?apellido=Garcia&cursos=Angular" +
-        estudianteSeleccionado.estudianteSeleccionado,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          cursos: [cursoseleccionado.cursoSeleccionado],
-        }),
-      }
-    )
+    fetch("http://localhost:1234/inscripcion", {
+      method: "POST",
+      body: JSON.stringify({
+        nombre: "",
+        apellido: form.form.apellidoEstudiante,
+        cursos: [form.form.nombreCurso],
+      }),
+    })
       .then((resp) => resp.json())
       .then((json) => {
-        //ver como funcionan los errores aca
-      });
-  }
-
-  function listarEstudiantes() {
-    fetch("http://localhost:1234/estudiantes")
-      .then((resp) => resp.json())
-      .then((json) => {
-        setEstudiantes(() => ({
-          estudiantes: json.estudiantes,
-          resultado: json.result,
-        }));
+        if (json.result === "error") {
+          setResultado({ resultado: json.result });
+          setMensaje({ mensaje: "No se completaron los datos correctamente" });
+          setErrors({ errors: json.errors });
+          return;
+        } else {
+          setResultado({ resultado: json.result });
+          setMensaje({ mensaje: "El estudiante fue inscripto exitosamente" });
+          setErrors({ errors: [] });
+        }
       });
   }
 
@@ -121,6 +157,7 @@ export default function CrearEstudiante(props) {
                   p: "20px",
                   pb: "5px",
                 }}
+                error={errors.errors.nombreCurso}
               >
                 Seleccione el curso:
               </FormLabel>
@@ -134,8 +171,10 @@ export default function CrearEstudiante(props) {
                 id="outlined-select-currency"
                 select
                 label="Cursos"
-                onChange={handleChangeCurso}
+                name="nombreCurso"
+                onChange={handleChangeForm}
                 helperText="Seleccione un curso de la lista"
+                error={errors.errors.nombreCurso}
               >
                 {cursos.cursos.map((c) => (
                   <MenuItem value={c.nombre}>{c.nombre}</MenuItem>
@@ -149,6 +188,7 @@ export default function CrearEstudiante(props) {
                   p: "20px",
                   pb: "5px",
                 }}
+                error={errors.errors.apellido}
               >
                 Seleccion el estudiante a inscribir:
               </FormLabel>
@@ -162,8 +202,10 @@ export default function CrearEstudiante(props) {
                 id="outlined-select-currency"
                 select
                 label="Estudiantes"
-                onChange={handleChangeEstudiante}
+                name="apellidoEstudiante"
+                onChange={handleChangeForm}
                 helperText="Seleccione un estudiante de la lista"
+                error={errors.errors.apellido}
               >
                 {estudiantes.estudiantes.map((c, index) => (
                   <MenuItem value={c.apellido}>
@@ -194,7 +236,18 @@ export default function CrearEstudiante(props) {
                 <ToggleButton value="inscribir">Inscribir</ToggleButton>
               </ToggleButtonGroup>
             </ListItem>
-            <ListItem></ListItem>
+            <ListItem>
+              <Stack sx={{ width: "100%", mb: "10px" }} spacing={2}>
+                {resultado.resultado && (
+                  <Alert severity={resultado.resultado}>
+                    <AlertTitle>
+                      {resultado.resultado === "error" ? "Error!" : "Éxito!"}
+                    </AlertTitle>
+                    {mensaje.mensaje}
+                  </Alert>
+                )}
+              </Stack>
+            </ListItem>
           </List>
         </Container>
       </Divider>

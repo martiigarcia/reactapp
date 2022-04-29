@@ -1,9 +1,9 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./CrearEstudiante.css";
 import Divider from "@mui/material/Divider";
 import Container from "@mui/material/Container";
 import FormLabel from "@mui/material/FormLabel";
-import { Input, MenuItem, TextField } from "@mui/material";
+import { Input } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -159,18 +159,19 @@ export default function CrearEstudiante(props) {
                 <ToggleButton value="confirmar">Confirmar</ToggleButton>
               </ToggleButtonGroup>
             </ListItem>
-            <ListItem></ListItem>
+            <ListItem>
+              <Stack sx={{ width: "100%", mb: "10px" }} spacing={2}>
+                {resultado.resultado && (
+                  <Alert severity={resultado.resultado}>
+                    <AlertTitle>
+                      {resultado.resultado === "error" ? "Error!" : "Éxito!"}
+                    </AlertTitle>
+                    {mensaje.mensaje}
+                  </Alert>
+                )}
+              </Stack>
+            </ListItem>
           </List>
-          <Stack sx={{ width: "100%", mb: "10px" }} spacing={2}>
-            {resultado.resultado && (
-              <Alert severity={resultado.resultado}>
-                <AlertTitle>
-                  {resultado.resultado === "error" ? "Error!" : "Éxito!"}
-                </AlertTitle>
-                {mensaje.mensaje}
-              </Alert>
-            )}
-          </Stack>
         </Container>
       </Divider>
     </div>
