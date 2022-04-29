@@ -12,40 +12,34 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Stack from "@mui/material/Stack";
+import FormHelperText from "@mui/material/FormHelperText";
 
 export default function CrearEstudiante(props) {
-  const [cursos, setCursos] = useState({ cursos: [] });
-  const [nombre, setNombre] = useState({ nombre: "" });
-  const [apellido, setApellido] = useState({ apellido: "" });
-  const [curso, setCurso] = useState({ curso: "" });
+  const [form, setForm] = useState({
+    form: { nombre: "", apellido: "" },
+  });
 
   const [alignment, setAlignment] = React.useState("");
+
   const [resultado, setResultado] = React.useState({ resultado: "" });
-  const [errors, setErrors] = React.useState({ errores: [] });
+  const [errors, setErrors] = React.useState({ errors: {} });
   const [mensaje, setMensaje] = React.useState({ mensaje: "" });
 
-  useEffect(() => {
-    listarCursos();
-  }, []);
+  useEffect(() => {}, []);
+  //que uso tendria en este momento el useEffect ¿?
 
-  function handleChangeCursos(e) {
+  function handleChangeForm(e) {
+    let nombre = e.target.name;
     let valor = e.target.value;
-    setCurso(() => ({
-      curso: valor,
+
+    setForm((state) => ({
+      form: {
+        ...state.form,
+        [nombre]: valor,
+      },
     }));
   }
-  function handleChangeNombre(e) {
-    let valor = e.target.value;
-    setNombre(() => ({
-      nombre: valor,
-    }));
-  }
-  function handleChangeApellido(e) {
-    let valor = e.target.value;
-    setApellido(() => ({
-      apellido: valor,
-    }));
-  }
+
   const handleChangeBoton = (event, newAlignment) => {
     setAlignment(newAlignment);
   };
@@ -53,41 +47,25 @@ export default function CrearEstudiante(props) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    console.log(nombre.nombre);
-    console.log(apellido.apellido);
-    console.log(curso.curso);
-
     fetch("http://localhost:1234/estudiantes", {
       method: "POST",
       body: JSON.stringify({
-        nombre: nombre.nombre,
-        apellido: apellido.apellido,
-        cursos: curso.curso,
+        nombre: form.form.nombre,
+        apellido: form.form.apellido,
       }),
     })
       .then((resp) => resp.json())
       .then((json) => {
         if (json.result === "error") {
-          console.log(json.result);
-          setResultado(json.result);
-          setErrors(json.errors);
+          setResultado({ resultado: json.result });
+          setMensaje({ mensaje: "No se completaron los datos correctamente" });
+          setErrors({ errors: json.errors });
           return;
         } else {
-          setResultado(json.result);
-          setMensaje("El estudiante fue creado exitosamente");
+          setResultado({ resultado: json.result });
+          setMensaje({ mensaje: "El estudiante fue registrado exitosamente" });
+          setErrors({ errors: [] });
         }
-      });
-    console.log(resultado.resultado);
-  }
-
-  function listarCursos() {
-    fetch("http://localhost:1234/cursos")
-      .then((resp) => resp.json())
-      .then((json) => {
-        setCursos(() => ({
-          cursos: json.cursos,
-          resultado: json.result,
-        }));
       });
   }
 
@@ -110,36 +88,14 @@ export default function CrearEstudiante(props) {
                 Complete los siguientes campos para registrar un estudiante:
               </p>
             </ListItem>
-            <ListItem>
-              <FormLabel
-                sx={{
-                  p: "20px",
-                }}
-              >
-                Cursos:{" "}
-              </FormLabel>
-              <TextField
-                sx={{
-                  width: "500px",
-                  pb: "20px",
-                }}
-                id="outlined-select-currency"
-                select
-                label="Cursos"
-                onChange={handleChangeCursos}
-                helperText="Seleccione un curso de la lista"
-              >
-                {cursos.cursos.map((c) => (
-                  <MenuItem value={c.nombre}>{c.nombre}</MenuItem>
-                ))}
-              </TextField>
-            </ListItem>
+
             <Divider variant="inset" component="li" />
             <ListItem>
               <FormLabel
                 sx={{
                   p: "20px",
                 }}
+                error={errors.errors.nombre}
               >
                 Nombre:{" "}
                 <Input
@@ -150,19 +106,25 @@ export default function CrearEstudiante(props) {
                   placeholder="Nombre"
                   type="text"
                   name="nombre"
-                  onChange={handleChangeNombre}
+                  onChange={handleChangeForm}
+                  helperText={errors.errors.nombre}
+                  error={errors.errors.nombre}
                 />
+                <FormHelperText error>{errors.errors.nombre}</FormHelperText>
               </FormLabel>
             </ListItem>
             <Divider variant="inset" component="li" />
+            <ListItem></ListItem>
             <ListItem>
               <FormLabel
                 sx={{
                   p: "20px",
                 }}
+                error={errors.errors.apellido}
               >
                 Apellido:{" "}
                 <Input
+                  id="component-error"
                   color="secondary"
                   fullWidth
                   sx={{ m: 1, width: "350px" }}
@@ -170,8 +132,11 @@ export default function CrearEstudiante(props) {
                   placeholder="Apellido"
                   type="text"
                   name="apellido"
-                  onChange={handleChangeApellido}
+                  onChange={handleChangeForm}
+                  helperText={errors.errors.apellido}
+                  error={errors.errors.apellido}
                 />
+                <FormHelperText error>{errors.errors.apellido}</FormHelperText>
               </FormLabel>
             </ListItem>
             <Divider variant="inset" component="li" />
@@ -197,10 +162,14 @@ export default function CrearEstudiante(props) {
             <ListItem></ListItem>
           </List>
           <Stack sx={{ width: "100%", mb: "10px" }} spacing={2}>
-            <Alert severity={resultado.resultado}>
-              <AlertTitle>Error</AlertTitle>
-              This is an error alert — <strong>check it out!</strong>
-            </Alert>
+            {resultado.resultado && (
+              <Alert severity={resultado.resultado}>
+                <AlertTitle>
+                  {resultado.resultado === "error" ? "Error!" : "Éxito!"}
+                </AlertTitle>
+                {mensaje.mensaje}
+              </Alert>
+            )}
           </Stack>
         </Container>
       </Divider>

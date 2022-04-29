@@ -69,7 +69,7 @@ export default function CrearEstudiante(props) {
     console.log(cursoseleccionado.cursoSeleccionado);
 
     fetch(
-      "http://localhost:1234/estudiantes?apellido=" +
+      "http://localhost:1234/inscripcion?apellido=Garcia&cursos=Angular" +
         estudianteSeleccionado.estudianteSeleccionado,
       {
         method: "POST",
